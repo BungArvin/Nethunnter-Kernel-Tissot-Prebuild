@@ -1,4 +1,4 @@
-RTL8192FU driver for Linux kernel (up to version 5.10)
+RTL8192FU driver for Linux kernel (up to 5.12 version)
 
 ------------------
 
@@ -28,7 +28,7 @@ RTL8192FU driver for Linux kernel (up to version 5.10)
 
 You can install rtl8192fu driver with following commands from PPA.
 
-for xUbuntu 16.04-18.04-20.04-20.10 / Linux Mint 18.x-19.x-20.x
+for xUbuntu 16.04-18.04-20.04-20.10-21.04 / Linux Mint 18.x-19.x-20.x
 
 `sudo add-apt-repository ppa:kelebek333/kablosuz`
 
