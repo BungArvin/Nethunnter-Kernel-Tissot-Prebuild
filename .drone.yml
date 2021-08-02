@@ -1,0 +1,27 @@
+kind: pipeline
+name: tissot
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  depth: 1
+
+steps:
+  - name: compile
+    image: debian:buster
+    environment:
+      BOTTOKEN:
+        from_secret: token
+      USERCHATID:
+        from_secret: chatid
+    commands:
+      - apt update && apt-get install -y build-essential bc python curl git zip ftp gcc-aarch64-linux-gnu gcc-arm-linux-gnueabi libssl-dev lftp zstd wget libfl-dev clang flex bison cpio kmod
+      - git clone --depth=1 https://github.com/JIaxyga/AnyKernel3 -b tissot && rm -rf AnyKernel3/README.md AnyKernel3/modules/system/lib/*
+      - make nethunter_defconfig all firmware_install modules_install O=out ARCH=arm64 -j$(nproc --all) INSTALL_MOD_PATH=. CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+      - cp out/arch/arm64/boot/Image.gz-dtb AnyKernel3
+      - rm -rf out/lib/modules/*/build out/lib/modules/*/source
+      - cp -r out/lib/modules AnyKernel3/modules/system/lib
+      - cd AnyKernel3 && zip -r9 kernel-tissot.zip *
+      - curl -F document=@kernel-tissot.zip "https://api.telegram.org/bot$BOTTOKEN/sendDocument" -F chat_id="$USERCHATID" -F caption="$(date)"
